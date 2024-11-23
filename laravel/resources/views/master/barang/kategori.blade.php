@@ -62,11 +62,11 @@
 
                                     <!-- Modal Footer -->
                                     <div class="mt-6 flex justify-end space-x-2">
-                                        <button @click="isModalOpen = false"
+                                        <button type="reset" @click="isModalOpen = false"
                                             class="bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300">
                                             Batal
                                         </button>
-                                        <button id="btnSimpan" onclick="simpanKategori()"
+                                        <button id="btnSimpan" type="submit" onclick="simpanKategori()"
                                             class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
                                             Simpan
                                         </button>
@@ -76,15 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="dataTable">
-                    <thead>
-                        <tr>
-                            <th class="capitalize">nama</th>
-                            <th class="capitalize">deskripsi</th>
-                            {{-- <th class="capitalize">aksi</th> --}}
-                        </tr>
-                    </thead>
-                </table>
+                <table id="dataTable"></table>
             </div>
         </div>
     </div>
@@ -95,14 +87,45 @@
         const $base_url = `${tmpURL}`;
 
         $(document).ready(async function() {
-            await ContentLoaderDataTable(`${$base_url}/api/kategori-barang`, `#dataTable`, [{
-                    data: 'name'
-                },
+            // DATA TABLES START
+            const dataTableshead = [
+                { data: 'name', title: 'Nama' },
+                { data: 'description', title: 'Deskripsi' },
                 {
-                    data: 'description'
-                },
-                // { data: 'aksi', orderable: false, searchable: false },
-            ]);
+                    data: 'actions',
+                    title: 'Aksi',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <div class='text-center'>
+                                <button class="bg-yellow-500 text-white font-medium px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300 btn-edit" data-id="${row.id}">
+                                    Edit
+                                </button>
+                                <button class="bg-red-500 text-white font-medium px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 btn-delete" data-id="${row.id}">
+                                    Delete
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            ];
+            await ContentLoaderDataTable(`${$base_url}/api/kategori-barang`, `#dataTable`, dataTableshead);
+
+            // Event Listener untuk Edit
+            $('#dataTable').on('click', '.btn-edit', function () {
+                const id = $(this).data('id');
+                alert('Edit data dengan ID: ' + id);
+            });
+
+            // Event Listener untuk Delete
+            $('#dataTable').on('click', '.btn-delete', function () {
+                const id = $(this).data('id');
+                if (confirm('Yakin ingin menghapus data dengan ID: ' + id + '?')) {
+                    alert('Data dengan ID ' + id + ' dihapus!');
+                }
+            });
+            // DATA TABLES END
         });
 
         function simpanKategori() {
@@ -146,32 +169,22 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        success: function(callback) {
-                            const {
-                                messages
-                            } = callback;
+                        success: async function(callback) {
+                            const { messages } = callback;
                             console.log('success', callback);
                             toastr.success(messages, "Success!");
 
                             $("#btnSimpan").show();
                             $("#loadingAjax").hide();
+
+                            location.reload();
                         },
                         error: function(callback) {
-                            const {
-                                responseJSON
-                            } = callback;
-                            const {
-                                errors,
-                                message,
-                                messages,
-                                datas
-                            } = responseJSON;
+                            const { responseJSON } = callback;
+                            const { errors, message, messages, datas } = responseJSON;
                             let errorInfo, validator;
                             if (datas) {
-                                const {
-                                    errorInfo: errInfo,
-                                    validator: validCallback
-                                } = datas
+                                const { errorInfo: errInfo, validator: validCallback } = datas
                                 errorInfo = errInfo;
                                 validator = validCallback;
                             }
@@ -184,9 +197,7 @@
                                     $(`#err_${key} li`).html(errors[key][0]);
                                 }
                             } else if (message || messages || errorInfo || validator) {
-                                const tmpMsg = (validator ?
-                                    "input data tidak sesuai atau tidak boleh kosong" : (errorInfo ?
-                                        errorInfo[2] : (messages ? messages : message)));
+                                const tmpMsg = (validator ? "input data tidak sesuai atau tidak boleh kosong" : (errorInfo ? errorInfo[2] : (messages ? messages : message)));
                                 toastr.error(tmpMsg, "Kesalahan!");
                             }
                             $("#btnSimpan").show();

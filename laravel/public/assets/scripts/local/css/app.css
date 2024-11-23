@@ -1,9 +1,9 @@
-@import url('../../vendor/noty/noty.min.css');
-@import url('../../vendor/jquery/jquery-ui.css');
-@import url('../../vendor/tostr/toastr.min.css');
-@import url('../../vendor/font-awesome/all.min.css');
-@import url('../../vendor/jquery/jquery.datetimepicker.css');
-@import url('../../vendor/dataTables/dataTables.jqueryui.min.css');
+@import url("../../vendor/noty/noty.min.css");
+@import url("../../vendor/jquery/jquery-ui.css");
+@import url("../../vendor/tostr/toastr.min.css");
+@import url("../../vendor/font-awesome/all.min.css");
+@import url("../../vendor/jquery/jquery.datetimepicker.css");
+@import url("../../vendor/dataTables/dataTables.jqueryui.min.css");
 
 .loaderAjax {
     border: 8px solid #f3f3f3; /* Light gray */
@@ -32,14 +32,39 @@
     animation: spin 1s linear infinite;
 }
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-select[name='dataTable_length']#dt-length-0 {
+select[name="dataTable_length"]#dt-length-0 {
     width: 75px !important;
 }
 
 .dataTable thead tr th {
     text-align: center !important;
+}
+
+.dataTable thead tr th {
+    text-align: center !important;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
 }
