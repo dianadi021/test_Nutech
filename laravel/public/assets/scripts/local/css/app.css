@@ -4,6 +4,7 @@
 @import url("../../vendor/font-awesome/all.min.css");
 @import url("../../vendor/jquery/jquery.datetimepicker.css");
 @import url("../../vendor/dataTables/dataTables.jqueryui.min.css");
+@import url("../../vendor/dataTables/datatables.css");
 
 .loaderAjax {
     border: 8px solid #f3f3f3; /* Light gray */

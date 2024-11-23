@@ -10,6 +10,8 @@ use App\Http\Libraries\Tools;
 use App\Http\Libraries\ResponseCode;
 use Illuminate\Validation\ValidationException;
 
+use Illuminate\Support\Facades\DB;
+
 class KategoriBarangController extends Controller
 {
     private function checkValidation($req){
@@ -63,6 +65,15 @@ class KategoriBarangController extends Controller
                 $this->checkValidation($req);
             }
 
+            $dataKatBarang = DB::table('kategori_barang')
+            ->select('id')
+            ->whereRaw('LOWER(name) = LOWER(?)', [$req->name])
+            ->first();
+
+            if (isset($dataKatBarang) && !empty($dataKatBarang)) {
+                throw new \Exception("data sudah digunakan!");
+            }
+
             $kategoriBarang = KategoriBarang::create([
                 'name' => $req->name,
                 'description' => $req->description,
@@ -71,6 +82,9 @@ class KategoriBarangController extends Controller
             return $this->resCode->CREATED("berhasil menyimpan data", $kategoriBarang);
         } catch (ValidationException $th) {
             return $this->resCode->SERVER_ERROR("kesalahan dalam menyimpan data!", $th);
+        } catch (\Exception $th) {
+            $tmp = $th->getMessage();
+            return $this->resCode->FORBIDDEN("gagal dalam menyimpan data!\n$tmp");
         }
     }
 
@@ -95,7 +109,6 @@ class KategoriBarangController extends Controller
      */
     public function edit(string $id)
     {
-        //
     }
 
     /**
@@ -103,7 +116,30 @@ class KategoriBarangController extends Controller
      */
     public function update(Request $req, string $id)
     {
-        //
+        setlocale(LC_TIME, 'id_ID.utf8');
+
+        try {
+            $kategoriBarang = KategoriBarang::findOrFail($id);
+
+            if (strcasecmp($kategoriBarang->name, $req->name) !== 0) {
+                $kategoriBarang->name = $req->name;
+            }
+
+            $kategoriBarang->description = (isset($req->description) && !empty($req->description) ? $req->description : '');
+
+            $callback = $kategoriBarang->save();
+
+            if (empty($callback)) {
+                throw new \Exception("data sudah digunakan!");
+            }
+
+            return $this->resCode->CREATED("berhasil menyimpan data");
+        } catch (ValidationException $th) {
+            return $this->resCode->SERVER_ERROR("kesalahan dalam menyimpan data!", $th);
+        } catch (\Exception $th) {
+            $tmp = $th->getMessage();
+            return $this->resCode->FORBIDDEN("gagal dalam menyimpan data!\ndata sudah terpakai.", $tmp);
+        }
     }
 
     /**
@@ -111,6 +147,19 @@ class KategoriBarangController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        setlocale(LC_TIME, 'id_ID.utf8');
+
+        try {
+            $getDatas = $this->tool->isValidVal($this->kategori_barang::find($id));
+            if (empty($getDatas)) {
+                return $this->resCode->OKE("tidak ada data");
+            }
+
+            $getDatas->delete();
+
+            return $this->resCode->CREATED("berhasil menghapus data", $getDatas);
+        } catch (ValidationException $th) {
+            return $this->resCode->SERVER_ERROR("kesalahan dalam menghapus data!", $th);
+        }
     }
 }

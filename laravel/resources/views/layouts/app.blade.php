@@ -65,7 +65,7 @@
     <script src="/assets/scripts/vendor/font-awesome/all.min.js"></script>
     <script src="/assets/scripts/vendor/sweetalert/sweetalert2@11.js"></script>
     <script defer src="/assets/scripts/vendor/alpinejs/alpinejs@3.14.3.min.js"></script>
-    <script defer src="/assets/scripts/vendor/dataTables/dataTables.min.js"></script>
+    <script defer src="/assets/scripts/vendor/dataTables/datatables.js"></script>
     <script defer src="/assets/scripts/vendor/dataTables/dataTables.jqueryui.min.js"></script>
 
     <!-- Vite Section -->
