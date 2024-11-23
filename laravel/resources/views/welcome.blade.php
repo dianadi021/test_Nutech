@@ -129,7 +129,9 @@
     </main>
 
     <script>
-        const $base_url = window.location.href;
+        const HOST = window.location.host;
+        const tempURL = HOST.includes("github.io") ? `https://${HOST}` : `http://${HOST}`;
+        const $base_url = `${tempURL}`;
         // ONLOAD START
         $(document).ready(function () {
             $("#loginSection").hide();
@@ -173,7 +175,7 @@
                     $("#csrf-token").val($('meta[name="csrf-token"]').attr('content'));
 
                     $.ajax({
-                        url: `${$base_url}api/users`,
+                        url: `${$base_url}/api/users`,
                         type: "POST",
                         data: $("#registerForm").serialize(),
                         xhrFields: { withCredentials: true },

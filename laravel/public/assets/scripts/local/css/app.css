@@ -35,3 +35,11 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+select[name='dataTable_length']#dt-length-0 {
+    width: 75px !important;
+}
+
+.dataTable thead tr th {
+    text-align: center !important;
+}

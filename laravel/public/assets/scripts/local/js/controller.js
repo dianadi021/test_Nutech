@@ -23,7 +23,7 @@ function AjaxLoginRedirect($section_id, $base_url) {
     $("#csrf-token").val($('meta[name="csrf-token"]').attr('content'));
 
     $.ajax({
-        url: `${$base_url}login`,
+        url: `${$base_url}/login`,
         type: "POST",
         data: $(`#${$section_id}`).serialize(),
         xhrFields: { withCredentials: true },
@@ -34,7 +34,7 @@ function AjaxLoginRedirect($section_id, $base_url) {
 
             $("#loadingAjax").hide();
             setTimeout(() => {
-                window.location.href = `${$base_url}dashboard`;
+                window.location.href = `${$base_url}/dashboard`;
             }, 1500);
         },
         error: function(callback) {
@@ -68,7 +68,7 @@ function ConvertToIDR($val) {
 }
 
 function ContentLoader($url, $id_content) {
-    $('.spinner').removeClass('hidden'); // Tampilkan spinner
+    $('#loadingContetLoader').show();
 
     $.ajax({
         url: `${$url}`,
@@ -77,10 +77,26 @@ function ContentLoader($url, $id_content) {
             $(`${$id_content}`).html(data);
         },
         complete: function () {
-            $('.spinner').addClass('hidden'); // Sembunyikan spinner
+            $('#loadingContetLoader').hide();
         },
         error: function () {
             toastr.error("Gagal mengambil data", "Kesalahan!");
+        },
+    });
+}
+
+function ContentLoaderDataTable($url, $id_content, $table_coloumn) {
+    $('#loadingContetLoader').show();
+
+    $.ajax({
+        url: `${$url}`,
+        type: 'GET',
+        success: function (response) {
+            $(`${$id_content}`).DataTable({
+                data: response.datas,
+                columns: $table_coloumn
+            })
+            $('#loadingContetLoader').hide();
         },
     });
 }
