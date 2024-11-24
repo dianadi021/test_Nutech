@@ -57,8 +57,8 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('profile.edit')">
-                                    {{ __('Barang') }}
+                                <x-dropdown-link :href="route('logistik.barang.produk')">
+                                    {{ __('Produk') }}
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>

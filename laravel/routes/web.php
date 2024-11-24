@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\Master\KategoriBarangController;
+use App\Http\Controllers\Web\Logistik\ProdukController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,10 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix' => 'master'], function () {
         Route::get('/kategori-produk', [KategoriBarangController::class, 'index'])->name('master.kategori.produk');
+    });
+
+    Route::group(['prefix' => 'logistik'], function () {
+        Route::get('/produk', [ProdukController::class, 'index'])->name('logistik.barang.produk');
     });
 });
 

@@ -127,3 +127,24 @@ function ContentLoaderDataTable($url, $id_content, $table_coloumn) {
         },
     });
 }
+
+async function GetDataFromAPI($url) {
+    try {
+        $('#loadingContetLoader').show();
+
+        const datas = await $.ajax({
+            url: `${$url}`,
+            method: 'GET'
+        });
+
+        $('#loadingContetLoader').hide();
+
+        return datas;
+    } catch (err) {
+        throw err;
+    }
+}
+
+function IDRToDecimal($val) {
+    return parseFloat($val.replace("Rp", "").replace(".", "").replace(" ", "").replace(",", "."));
+}

@@ -41,3 +41,10 @@ function AutoToIDR() {
         $(this).val(formatted);
     });
 }
+
+function InputNumberOnly() {
+    $(".input_number_only").on("input", function () {
+        let value = $(this).val().replace(/[^0-9]/g, "");
+        $(this).val(value);
+    });
+}
